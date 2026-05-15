@@ -1,0 +1,155 @@
+body {
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif;
+    max-width: 1000px;
+    margin: 20px auto;
+    padding: 20px;
+    background: #8FBC8F;
+}
+
+h1 {
+    text-align: center;
+    color: #333;
+}
+
+.container {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+}
+
+.matrix-input {
+    display: grid;
+    grid-template-columns: repeat(4, 90px);
+    gap: 10px;
+    justify-content: center;
+    margin: 20px 0;
+}
+
+.matrix-input input {
+    width: 90px;
+    height: 45px;
+    text-align: center;
+    font-size: 16px;
+    border: 2px solid #ddd;
+    border-radius: 6px;
+}
+
+.matrix-input input:focus {
+    border-color: #4CAF50;
+    outline: none;
+}
+
+.labels {
+    display: grid;
+    grid-template-columns: repeat(4, 90px);
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 5px;
+    font-weight: bold;
+    color: #555;
+}
+
+.btn-group {
+    display: flex;
+    gap: 12px;
+    justify-content: center;
+    margin: 25px 0;
+    flex-wrap: wrap;
+}
+
+.btn {
+    padding: 12px 28px;
+    font-size: 16px;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 500;
+}
+
+.btn-resolver {
+    background: #4CAF50;
+}
+
+.btn-resolver:hover {
+    background: #45a049;
+}
+
+.btn-limpiar {
+    background: #f44336;
+}
+
+.btn-limpiar:hover {
+    background: #da190b;
+}
+
+.btn-ejemplo {
+    background: #2196F3;
+}
+
+.btn-ejemplo:hover {
+    background: #0b7dda;
+}
+
+.step {
+    margin: 25px 0;
+    padding: 18px;
+    background: #f9f9f9;
+    border-left: 4px solid #4CAF50;
+    border-radius: 6px;
+}
+
+.step h3 {
+    margin: 0 0 12px 0;
+    color: #333;
+}
+
+.matrix {
+    display: inline-block;
+    border-left: 3px solid #333;
+    border-right: 3px solid #333;
+    padding: 10px 15px;
+    margin: 10px 0;
+}
+
+.matrix-row {
+    display: flex;
+    gap: 20px;
+}
+
+.matrix-cell {
+    width: 80px;
+    text-align: center;
+    padding: 6px;
+    font-family: 'Courier New', monospace;
+    font-size: 16px;
+}
+
+.solution {
+    background: #e8f5e9;
+    padding: 18px;
+    border-radius: 8px;
+    margin-top: 25px;
+    font-size: 19px;
+    font-weight: bold;
+    text-align: center;
+}
+
+.error {
+    color: #d32f2f;
+    font-weight: bold;
+    text-align: center;
+    background: #ffebee;
+    padding: 15px;
+    border-radius: 8px;
+}
+
+.warning {
+    color: #f57c00;
+    font-weight: bold;
+    text-align: center;
+    background: #fff3e0;
+    padding: 15px;
+    border-radius: 8px;
+}
