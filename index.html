@@ -1,216 +1,276 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Solucionador Gauss-Jordan Fracciones</title>
-    <style>
-        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Arial, sans-serif; max-width: 1000px; margin: 20px auto; padding: 20px; background: #8FBC8F; }
-        h1 { text-align: center; color: #333; }
-     .container { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
-     .matrix-input { display: grid; grid-template-columns: repeat(4, 90px); gap: 10px; justify-content: center; margin: 20px 0; }
-     .matrix-input input { width: 90px; height: 45px; text-align: center; font-size: 16px; border: 2px solid #ddd; border-radius: 6px; }
-     .matrix-input input:focus { border-color: #4CAF50; outline: none; }
-     .labels { display: grid; grid-template-columns: repeat(4, 90px); gap: 10px; justify-content: center; margin-bottom: 5px; font-weight: bold; color: #555; }
-     .btn-group { display: flex; gap: 12px; justify-content: center; margin: 25px 0; flex-wrap: wrap; }
-     .btn { padding: 12px 28px; font-size: 16px; color: white; border: none; border-radius: 8px; cursor: pointer; font-weight: 500; }
-     .btn-resolver { background: #4CAF50; }
-     .btn-resolver:hover { background: #45a049; }
-     .btn-limpiar { background: #f44336; }
-     .btn-limpiar:hover { background: #da190b; }
-     .btn-ejemplo { background: #2196F3; }
-     .btn-ejemplo:hover { background: #0b7dda; }
-     .step { margin: 25px 0; padding: 18px; background: #f9f9f9; border-left: 4px solid #4CAF50; border-radius: 6px; }
-     .step h3 { margin: 0 0 12px 0; color: #333; }
-     .matrix { display: inline-block; border-left: 3px solid #333; border-right: 3px solid #333; padding: 10px 15px; margin: 10px 0; }
-     .matrix-row { display: flex; gap: 20px; }
-     .matrix-cell { width: 80px; text-align: center; padding: 6px; font-family: 'Courier New', monospace; font-size: 16px; }
-     .solution { background: #e8f5e9; padding: 18px; border-radius: 8px; margin-top: 25px; font-size: 19px; font-weight: bold; text-align: center; }
-     .error { color: #d32f2f; font-weight: bold; text-align: center; background: #ffebee; padding: 15px; border-radius: 8px; }
-     .warning { color: #f57c00; font-weight: bold; text-align: center; background: #fff3e0; padding: 15px; border-radius: 8px; }
-    </style>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>Reducción de Matrices 3x4_REV_JAURE</title>
+
+<style>
+    body{
+        font-family: Arial, sans-serif;
+        background: #0f172a;
+        color: white;
+        margin: 0;
+        padding: 20px;
+    }
+
+    h1{
+        text-align: center;
+        margin-bottom: 10px;
+    }
+
+    .container{
+        max-width: 1000px;
+        margin: auto;
+    }
+
+    .matrix{
+        display: grid;
+        grid-template-columns: repeat(4, 80px);
+        gap: 10px;
+        justify-content: center;
+        margin: 20px 0;
+    }
+
+    input{
+        width: 80px;
+        height: 50px;
+        text-align: center;
+        font-size: 18px;
+        border-radius: 10px;
+        border: none;
+        background: #1e293b;
+        color: white;
+    }
+
+    button{
+        display: block;
+        margin: 20px auto;
+        padding: 15px 30px;
+        font-size: 18px;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        background: #38bdf8;
+        color: black;
+        font-weight: bold;
+    }
+
+    button:hover{
+        background: #0ea5e9;
+    }
+
+    .steps{
+        margin-top: 30px;
+    }
+
+    .step{
+        background: #1e293b;
+        padding: 15px;
+        border-radius: 15px;
+        margin-bottom: 20px;
+    }
+
+    .matrix-display{
+        font-family: monospace;
+        font-size: 20px;
+        line-height: 1.8;
+        overflow-x: auto;
+    }
+
+    .solution{
+        background: #22c55e;
+        color: black;
+        padding: 20px;
+        border-radius: 15px;
+        font-size: 22px;
+        text-align: center;
+        font-weight: bold;
+        margin-top: 20px;
+    }
+</style>
 </head>
+
 <body>
-    <div class="container">
-        <h1>solucionador de sistemas</h1>
-        <p style="text-align:center; color: #666;"></p>
-        
-        <div class="labels"><div>a</div><div>b</div><div>c</div><div>Resultado</div></div>
-        <div class="matrix-input" id="inputs">
-            <input type="text" id="m00" placeholder="R1"><input type="text" id="m01" placeholder="R1">
-            <input type="text" id="m02" placeholder="R1"><input type="text" id="m03" placeholder="R1">
-            <input type="text" id="m10" placeholder="R2"><input type="text" id="m11" placeholder="R2">
-            <input type="text" id="m12" placeholder="R2"><input type="text" id="m13" placeholder="R2">
-            <input type="text" id="m20" placeholder="R3"><input type="text" id="m21" placeholder="R3">
-            <input type="text" id="m22" placeholder="R3"><input type="text" id="m23" placeholder="R3">
-        </div>
-        
-        <div class="btn-group">
-            <button class="btn btn-resolver" onclick="resolver()">Resolver</button>
-            <button class="btn btn-limpiar" onclick="limpiar()">Limpiar todo</button>
-            <button class="btn btn-ejemplo" onclick="cargarEjemplo()">Cargar ejemplo</button>
-        </div>
-        
-        <div id="resultado"></div>
+
+<div class="container">
+
+    <h1>Sistema de Ecuaciones 3x4_REV_JAURE_CORRECTO</h1>
+    <p style="text-align:center;">
+        Ingresa los valores de la matriz aumentada.
+    </p>
+
+    <div class="matrix">
+        <!-- FILA 1 -->
+        <input type="number" id="m00" placeholder="a11">
+        <input type="number" id="m01" placeholder="a12">
+        <input type="number" id="m02" placeholder="a13">
+        <input type="number" id="m03" placeholder="R1">
+
+        <!-- FILA 2 -->
+        <input type="number" id="m10" placeholder="a21">
+        <input type="number" id="m11" placeholder="a22">
+        <input type="number" id="m12" placeholder="a23">
+        <input type="number" id="m13" placeholder="R2">
+
+        <!-- FILA 3 -->
+        <input type="number" id="m20" placeholder="a31">
+        <input type="number" id="m21" placeholder="a32">
+        <input type="number" id="m22" placeholder="a33">
+        <input type="number" id="m23" placeholder="R3">
     </div>
 
-    <script>
-        class F {
-            constructor(n, d = 1) {
-                if (d === 0) throw new Error("Denominador no puede ser 0");
-                let m = this.gcd(Math.abs(n), Math.abs(d));
-                this.n = n / m; this.d = d / m;
-                if (this.d < 0) { this.n *= -1; this.d *= -1; }
-            }
-            gcd(a, b) { return b? this.gcd(b, a % b) : a; }
-            add(o) { return new F(this.n * o.d + o.n * this.d, this.d * o.d); }
-            sub(o) { return new F(this.n * o.d - o.n * this.d, this.d * o.d); }
-            mul(o) { return new F(this.n * o.n, this.d * o.d); }
-            div(o) { if (o.n === 0) throw new Error("División entre 0"); return new F(this.n * o.d, this.d * o.n); }
-            esCero() { return this.n === 0; }
-            esUno() { return this.n === this.d; }
-            esMenosUno() { return this.n === -this.d; }
-            toS() {
-                if (this.d === 1) return `${this.n}`;
-                if (this.n === 0) return `0`;
-                return `${this.n}/${this.d}`;
-            }
-            static from(s) {
-                s = s.trim();
-                if (s === '') throw new Error("Campo vacío");
-                if (s.includes('/')) {
-                    let [n, d] = s.split('/');
-                    return new F(parseInt(n), parseInt(d));
-                }
-                let num = parseFloat(s);
-                if (isNaN(num)) throw new Error(`"${s}" no es un número válido`);
-                // Convertir decimal a fracción
-                if (s.includes('.')) {
-                    let dec = s.split('.')[1].length;
-                    let den = Math.pow(10, dec);
-                    return new F(Math.round(num * den), den);
-                }
-                return new F(num);
-            }
+    <button onclick="resolver()">Resolver Matriz</button>
+
+    <div class="steps" id="steps"></div>
+
+</div>
+
+<script>
+
+function obtenerMatriz() {
+    let matriz = [];
+
+    for(let i = 0; i < 3; i++) {
+        let fila = [];
+        for(let j = 0; j < 4; j++) {
+            let valor = parseFloat(document.getElementById(`m${i}${j}`).value) || 0;
+            fila.push(valor);
         }
+        matriz.push(fila);
+    }
 
-        function getMatriz() {
-            let m = [];
-            for (let i = 0; i < 3; i++) {
-                m[i] = [];
-                for (let j = 0; j < 4; j++) {
-                    m[i][j] = F.from(document.getElementById(`m${i}${j}`).value);
-                }
-            }
-            return m;
+    return matriz;
+}
+
+function mostrarMatriz(matriz, titulo) {
+
+    const steps = document.getElementById("steps");
+
+    let html = `
+        <div class="step">
+            <h2>${titulo}</h2>
+            <div class="matrix-display">
+    `;
+
+    for(let i = 0; i < matriz.length; i++) {
+        html += "[ ";
+        for(let j = 0; j < matriz[i].length; j++) {
+            html += Number(matriz[i][j].toFixed(3)) + " ";
         }
+        html += "]<br>";
+    }
 
-        function showM(matriz, titulo, operacion) {
-            let html = `<div class="step"><h3>${titulo}</h3>`;
-            if (operacion) html += `<p><b>Operación:</b> ${operacion}</p>`;
-            html += `<div class="matrix">`;
-            for (let i = 0; i < 3; i++) {
-                html += `<div class="matrix-row">`;
-                for (let j = 0; j < 4; j++) {
-                    html += `<div class="matrix-cell">${matriz[i][j].toS()}</div>`;
-                }
-                html += `</div>`;
-            }
-            html += `</div></div>`;
-            return html;
-        }
+    html += `
+            </div>
+        </div>
+    `;
 
-        function formatOp(fila, pivote, factor) {
-            if (factor.esUno()) return `R${fila+1} → R${fila+1} - R${pivote+1}`;
-            if (factor.esMenosUno()) return `R${fila+1} → R${fila+1} + R${pivote+1}`;
-            return `R${fila+1} → R${fila+1} - (${factor.toS()})*R${pivote+1}`;
-        }
+    steps.innerHTML += html;
+}
 
-        function limpiar() {
-            for (let i = 0; i < 3; i++) for (let j = 0; j < 4; j++) document.getElementById(`m${i}${j}`).value = '';
-            document.getElementById('resultado').innerHTML = '';
-        }
+function resolver() {
 
-        function cargarEjemplo() {
-            const v = [['2', '1', '-1', '8'], ['-3', '-1', '2', '-11'], ['-2', '1', '2', '-3']];
-            for (let i = 0; i < 3; i++) for (let j = 0; j < 4; j++) document.getElementById(`m${i}${j}`).value = v[i][j];
-            document.getElementById('resultado').innerHTML = '';
-        }
+    document.getElementById("steps").innerHTML = "";
 
-        function resolver() {
-            const div = document.getElementById('resultado');
-            div.innerHTML = '';
-            try {
-                let m = getMatriz();
-                let pasos = showM(m, 'Matriz inicial');
+    let m = obtenerMatriz();
 
-                // Gauss-Jordan con pivoteo parcial
-                for (let col = 0; col < 3; col++) {
-                    // 1. Pivoteo: buscar el mayor en valor absoluto
-                    let pivote = col;
-                    for (let i = col + 1; i < 3; i++) {
-                        let valActual = Math.abs(m[i][col].n / m[i][col].d);
-                        let valPivote = Math.abs(m[pivote][col].n / m[pivote][col].d);
-                        if (valActual > valPivote) pivote = i;
-                    }
+    mostrarMatriz(m, "Matriz Inicial");
 
-                    if (pivote!== col) {
-                        [m[col], m[pivote]] = [m[pivote], m[col]];
-                        pasos += showM(m, `Pivoteo`, `R${col+1} ↔ R${pivote+1}`);
-                    }
+    // PASO 1
+    let pivote1 = m[0][0];
 
-                    // 2. Verificar si hay solución
-                    if (m[col][col].esCero()) {
-                        // Revisar si toda la columna es 0
-                        let todaColCero = true;
-                        for (let i = col; i < 3; i++) {
-                            if (!m[i][col].esCero()) todaColCero = false;
-                        }
-                        if (todaColCero) {
-                            // Verificar si es inconsistente o infinitas soluciones
-                            for (let i = col; i < 3; i++) {
-                                if (!m[i][3].esCero()) throw new Error("Sistema inconsistente: No tiene solución");
-                            }
-                            throw new Error("Sistema con infinitas soluciones");
-                        }
-                    }
+    for(let j = 0; j < 4; j++) {
+        m[0][j] /= pivote1;
+    }
 
-                    // 3. Normalizar pivote a 1
-                    let div = m[col][col];
-                    if (!div.esUno()) {
-                        for (let j = 0; j < 4; j++) m[col][j] = m[col][j].div(div);
-                        pasos += showM(m, `Normalizar R${col+1}`, `R${col+1} → R${col+1} / (${div.toS()})`);
-                    }
+    mostrarMatriz(m, "R1 = R1 / pivote");
 
-                    // 4. Hacer 0s en la columna
-                    for (let i = 0; i < 3; i++) {
-                        if (i!== col &&!m[i][col].esCero()) {
-                            let factor = m[i][col];
-                            for (let j = 0; j < 4; j++) {
-                                m[i][j] = m[i][j].sub(factor.mul(m[col][j]));
-                            }
-                            pasos += showM(m, `Eliminar en R${i+1}`, formatOp(i, col, factor));
-                        }
-                    }
-                }
+    // HACER CEROS DEBAJO
+    let factor21 = m[1][0];
 
-                // Verificar inconsistencia final
-                for (let i = 0; i < 3; i++) {
-                    if (m[i][0].esCero() && m[i][1].esCero() && m[i][2].esCero() &&!m[i][3].esCero()) {
-                        throw new Error(`Sistema inconsistente: 0 = ${m[i][3].toS()}`);
-                    }
-                }
+    for(let j = 0; j < 4; j++) {
+        m[1][j] -= factor21 * m[0][j];
+    }
 
-                pasos += `<div class="solution">
-                    Solución única: a = ${m[0][3].toS()}, b = ${m[1][3].toS()}, c = ${m[2][3].toS()}
-                </div>`;
+    mostrarMatriz(m, "R2 = R2 - factor * R1");
 
-                div.innerHTML = pasos;
+    let factor31 = m[2][0];
 
-            } catch (e) {
-                div.innerHTML = `<div class="error">${e.message}</div>`;
-            }
-        }
-    </script>
+    for(let j = 0; j < 4; j++) {
+        m[2][j] -= factor31 * m[0][j];
+    }
+
+    mostrarMatriz(m, "R3 = R3 - factor * R1");
+
+    // PASO 2
+    let pivote2 = m[1][1];
+
+    for(let j = 0; j < 4; j++) {
+        m[1][j] /= pivote2;
+    }
+
+    mostrarMatriz(m, "R2 = R2 / pivote");
+
+    // HACER CEROS ARRIBA Y ABAJO
+    let factor12 = m[0][1];
+
+    for(let j = 0; j < 4; j++) {
+        m[0][j] -= factor12 * m[1][j];
+    }
+
+    mostrarMatriz(m, "R1 = R1 - factor * R2");
+
+    let factor32 = m[2][1];
+
+    for(let j = 0; j < 4; j++) {
+        m[2][j] -= factor32 * m[1][j];
+    }
+
+    mostrarMatriz(m, "R3 = R3 - factor * R2");
+
+    // PASO 3
+    let pivote3 = m[2][2];
+
+    for(let j = 0; j < 4; j++) {
+        m[2][j] /= pivote3;
+    }
+
+    mostrarMatriz(m, "R3 = R3 / pivote");
+
+    // HACER CEROS ARRIBA
+    let factor13 = m[0][2];
+
+    for(let j = 0; j < 4; j++) {
+        m[0][j] -= factor13 * m[2][j];
+    }
+
+    mostrarMatriz(m, "R1 = R1 - factor * R3");
+
+    let factor23 = m[1][2];
+
+    for(let j = 0; j < 4; j++) {
+        m[1][j] -= factor23 * m[2][j];
+    }
+
+    mostrarMatriz(m, "R2 = R2 - factor * R3");
+
+    // RESULTADOS
+    let x = m[0][3];
+    let y = m[1][3];
+    let z = m[2][3];
+
+    document.getElementById("steps").innerHTML += `
+        <div class="solution">
+            Solución Final:<br><br>
+            a = ${x.toFixed(3)}<br>
+            b = ${y.toFixed(3)}<br>
+            c = ${z.toFixed(3)}
+        </div>
+    `;
+}
+
+</script>
+
 </body>
 </html>
